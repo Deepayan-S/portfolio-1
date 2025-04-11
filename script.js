@@ -1,18 +1,52 @@
 document.addEventListener("DOMContentLoaded", function () {
-  const thumbnails = document.querySelectorAll(".thumbnail");
-  const mainCertificateImg = document.querySelector(".main-certificate img");
-  const certificateTitle = document.querySelector(".certificate-details h3");
-  const certificateDescription = document.querySelector(
-    ".certificate-details p"
+  // Get all thumbnail elements for both desktop and mobile
+  const desktopThumbnails = document.querySelectorAll(
+    ".main-container .thumbnail"
   );
-  const certificateIssuer = document.querySelector(
-    ".certificate-meta-item:nth-child(1) span:last-child"
+  const mobileThumbnails = document.querySelectorAll(
+    ".mobile-container .thumbnail"
   );
-  const certificateDate = document.querySelector(
-    ".certificate-meta-item:nth-child(2) span:last-child"
+
+  // Get main certificate images
+  const desktopMainCertificate = document.querySelector(
+    ".main-container .main-certificate img"
   );
-  const certificateId = document.querySelector(
-    ".certificate-meta-item:nth-child(3) span:last-child"
+  const mobileMainCertificate = document.querySelector(
+    ".mobile-container .main-certificate img"
+  );
+
+  // Get certificate detail elements for desktop
+  const desktopCertificateTitle = document.querySelector(
+    ".main-container .certificate-title"
+  );
+  const desktopCertificateDescription = document.querySelector(
+    ".main-container .certificate-description"
+  );
+  const desktopCertificateIssuer = document.querySelector(
+    ".main-container .certificate-issuer"
+  );
+  const desktopCertificateDate = document.querySelector(
+    ".main-container .certificate-date"
+  );
+  const desktopCertificateId = document.querySelector(
+    ".main-container .certificate-id"
+  );
+
+  // Get certificate detail elements for mobile
+  const mobileCertificateTitle = document.querySelector(
+    ".mobile-container .certificate-title"
+  );
+  const mobileCertificateDescription = document.querySelector(
+    ".mobile-container .certificate-description"
+  );
+  const mobileCertificateIssuer = document.querySelector(
+    ".mobile-container .certificate-issuer"
+  );
+  const mobileCertificateDate = document.querySelector(
+    ".mobile-container .certificate-date"
+  );
+  const mobileCertificateId = document.querySelector(
+    ".mobile-container .certificate-id"
   );
 
   // Certificate descriptions
@@ -25,24 +59,45 @@ document.addEventListener("DOMContentLoaded", function () {
       "This certificate validates the understanding and implementation of responsive web design principles, ensuring optimal user experience across all device sizes.",
   };
 
-  thumbnails.forEach((thumbnail) => {
+  // Function to update certificate details
+  function updateCertificateDetails(thumbnail, isMobile = false) {
+    const title = thumbnail.dataset.title;
+    const issuer = thumbnail.dataset.issuer;
+    const date = thumbnail.dataset.date;
+    const id = thumbnail.dataset.id;
+
+    if (isMobile) {
+      mobileMainCertificate.src = thumbnail.querySelector("img").src;
+      mobileCertificateTitle.textContent = title;
+      mobileCertificateDescription.textContent = certificateDescriptions[id];
+      mobileCertificateIssuer.textContent = issuer;
+      mobileCertificateDate.textContent = date;
+      mobileCertificateId.textContent = id;
+    } else {
+      desktopMainCertificate.src = thumbnail.querySelector("img").src;
+      desktopCertificateTitle.textContent = title;
+      desktopCertificateDescription.textContent = certificateDescriptions[id];
+      desktopCertificateIssuer.textContent = issuer;
+      desktopCertificateDate.textContent = date;
+      desktopCertificateId.textContent = id;
+    }
+  }
+
+  // Add click event listeners for desktop thumbnails
+  desktopThumbnails.forEach((thumbnail) => {
     thumbnail.addEventListener("click", function () {
-      // Remove active class from all thumbnails
-      thumbnails.forEach((t) => t.classList.remove("active"));
-
-      // Add active class to clicked thumbnail
+      desktopThumbnails.forEach((t) => t.classList.remove("active"));
       this.classList.add("active");
+      updateCertificateDetails(this, false);
+    });
+  });
 
-      // Update main certificate image
-      mainCertificateImg.src = this.querySelector("img").src;
-
-      // Update certificate details
-      certificateTitle.textContent = this.dataset.title;
-      certificateDescription.textContent =
-        certificateDescriptions[this.dataset.id];
-      certificateIssuer.textContent = this.dataset.issuer;
-      certificateDate.textContent = this.dataset.date;
-      certificateId.textContent = this.dataset.id;
+  // Add click event listeners for mobile thumbnails
+  mobileThumbnails.forEach((thumbnail) => {
+    thumbnail.addEventListener("click", function () {
+      mobileThumbnails.forEach((t) => t.classList.remove("active"));
+      this.classList.add("active");
+      updateCertificateDetails(this, true);
     });
   });
 
@@ -95,46 +150,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Check if skills section is already in viewport on page load
   setTimeout(animateProgressBars, 500); // Delay initial check for better browser compatibility
-
-  // Add event listeners for mobile container thumbnails
-  document
-    .querySelectorAll(".mobile-container .thumbnail")
-    .forEach((thumbnail) => {
-      thumbnail.addEventListener("click", function () {
-        // Remove active class from all thumbnails
-        document
-          .querySelectorAll(".mobile-container .thumbnail")
-          .forEach((t) => t.classList.remove("active"));
-
-        // Add active class to clicked thumbnail
-        this.classList.add("active");
-
-        // Update main certificate image
-        const mainCertificate = this.querySelector("img").src;
-        document.querySelector(".mobile-container .main-certificate img").src =
-          mainCertificate;
-
-        // Update certificate details
-        const title = this.getAttribute("data-title");
-        const issuer = this.getAttribute("data-issuer");
-        const date = this.getAttribute("data-date");
-        const id = this.getAttribute("data-id");
-
-        const detailsContainer = document.querySelector(
-          ".mobile-container .certificate-details"
-        );
-        detailsContainer.querySelector("h3").textContent = title;
-        detailsContainer.querySelector(
-          ".certificate-meta-item:nth-child(1) span:last-child"
-        ).textContent = issuer;
-        detailsContainer.querySelector(
-          ".certificate-meta-item:nth-child(2) span:last-child"
-        ).textContent = date;
-        detailsContainer.querySelector(
-          ".certificate-meta-item:nth-child(3) span:last-child"
-        ).textContent = id;
-      });
-    });
 
   // Smooth scrolling for navigation links
   document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
