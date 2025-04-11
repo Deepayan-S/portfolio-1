@@ -2,6 +2,9 @@ document.addEventListener("DOMContentLoaded", function () {
   const thumbnails = document.querySelectorAll(".thumbnail");
   const mainCertificateImg = document.querySelector(".main-certificate img");
   const certificateTitle = document.querySelector(".certificate-details h3");
+  const certificateDescription = document.querySelector(
+    ".certificate-details p"
+  );
   const certificateIssuer = document.querySelector(
     ".certificate-meta-item:nth-child(1) span:last-child"
   );
@@ -12,21 +15,34 @@ document.addEventListener("DOMContentLoaded", function () {
     ".certificate-meta-item:nth-child(3) span:last-child"
   );
 
+  // Certificate descriptions
+  const certificateDescriptions = {
+    Python:
+      "This certificate recognizes the successful completion of the web development course focused on building dynamic web applications using modern technologies and best practices.",
+    Javascript:
+      "This certificate acknowledges the completion of advanced JavaScript programming concepts, including modern ES6+ features, asynchronous programming, and web application development.",
+    "Responsive Web Design":
+      "This certificate validates the understanding and implementation of responsive web design principles, ensuring optimal user experience across all device sizes.",
+  };
+
   thumbnails.forEach((thumbnail) => {
     thumbnail.addEventListener("click", function () {
-      // Update main image
-      const thumbnailImg = this.querySelector("img");
-      mainCertificateImg.src = thumbnailImg.src;
+      // Remove active class from all thumbnails
+      thumbnails.forEach((t) => t.classList.remove("active"));
+
+      // Add active class to clicked thumbnail
+      this.classList.add("active");
+
+      // Update main certificate image
+      mainCertificateImg.src = this.querySelector("img").src;
 
       // Update certificate details
       certificateTitle.textContent = this.dataset.title;
+      certificateDescription.textContent =
+        certificateDescriptions[this.dataset.id];
       certificateIssuer.textContent = this.dataset.issuer;
       certificateDate.textContent = this.dataset.date;
       certificateId.textContent = this.dataset.id;
-
-      // Update active state
-      thumbnails.forEach((item) => item.classList.remove("active"));
-      this.classList.add("active");
     });
   });
 
